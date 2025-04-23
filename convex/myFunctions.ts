@@ -5,6 +5,42 @@ import { api } from "./_generated/api";
 // Write your Convex functions in any file inside this directory (`convex`).
 // See https://docs.convex.dev/functions for more.
 
+// Create a task.
+export const createTask = mutation({
+  args: { value: v.string(), clerkUserId: v.string() },
+  handler: async (ctx, { value, clerkUserId }) => {
+    await ctx.db.insert("tasks", { value, completed: false, clerkUserId });
+  },
+});
+
+// Return all user's tasks in the database.
+export const getTaskList = query({
+  args: { clerkUserId: v.string() },
+  handler: async (ctx, { clerkUserId }) => {
+    return await ctx.db
+      .query("tasks")
+      .filter((q) => q.eq(q.field("clerkUserId"), clerkUserId))
+      .collect();
+  },
+});
+
+// Mark a task as completed.
+export const setTaskCompleted = mutation({
+  args: { taskId: v.id("tasks"), completed: v.boolean() },
+  handler: async (ctx, { taskId, completed }) => {
+    // Update the database using TypeScript
+    await ctx.db.patch(taskId, { completed });
+  },
+});
+
+// Delete a task.
+export const deleteTask = mutation({
+  args: { taskId: v.id("tasks") },
+  handler: async (ctx, { taskId }) => {
+    await ctx.db.delete(taskId);
+  },
+});
+
 // You can read data from the database via a query:
 export const listNumbers = query({
   // Validators for arguments.
