@@ -13,6 +13,14 @@ export const createTask = mutation({
   },
 });
 
+// Edit a task.
+export const editTask = mutation({
+  args: { taskId: v.id("tasks"), value: v.string() },
+  handler: async (ctx, { taskId, value }) => {
+    await ctx.db.patch(taskId, { value });
+  },
+});
+
 // Return all user's tasks in the database.
 export const getTaskList = query({
   args: { clerkUserId: v.string() },
