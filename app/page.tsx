@@ -34,6 +34,7 @@ function TaskList() {
         const formData = new FormData(e.target as HTMLFormElement);
         const value = formData.get("value") as string;
         createTask({ value, clerkUserId: clerkUserId ?? "" });
+        (e.target as HTMLFormElement).reset();
       }}
     >
       <input
@@ -63,6 +64,7 @@ function TaskList() {
               {value}
             </li>
             <button
+              type="button"
               onClick={() => {
                 deleteTask({ taskId: _id });
               }}
